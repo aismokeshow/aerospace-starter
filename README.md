@@ -21,8 +21,9 @@ If you've gone down the yabai rabbit hole, wrestled with Amethyst's defaults, or
 > **Fastest path: use [Claude Code](https://claude.ai/claude-code)**
 >
 > ```bash
-> git clone https://github.com/aismokeshow/aerospace-starter.git
-> cd aerospace-starter
+> mkdir -p ~/Developer
+> git clone https://github.com/aismokeshow/aerospace-starter.git ~/Developer/aerospace-starter
+> cd ~/Developer/aerospace-starter
 > claude --dangerously-skip-permissions
 > ```
 > Then type `install`. Claude handles Homebrew, AeroSpace, config linking,
@@ -39,10 +40,12 @@ If you've gone down the yabai rabbit hole, wrestled with Amethyst's defaults, or
 brew install --cask nikitabobko/tap/aerospace
 
 # 2. Clone this repo
-git clone https://github.com/aismokeshow/aerospace-starter.git
-cd aerospace-starter
+mkdir -p ~/Developer
+git clone https://github.com/aismokeshow/aerospace-starter.git ~/Developer/aerospace-starter
+cd ~/Developer/aerospace-starter
 
 # 3. Link as your AeroSpace config
+mkdir -p ~/.config
 ln -sf "$PWD" ~/.config/aerospace
 chmod +x *.sh
 

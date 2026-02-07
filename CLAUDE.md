@@ -1,68 +1,61 @@
-# AeroSpace Starter
+# AeroSpace Starter — Setup
 
 > For fully automated setup, run Claude Code with `--dangerously-skip-permissions`.
 > Otherwise Claude will ask before each system change — which is fine, just slower.
 
-## Project Overview
+This will set up AeroSpace tiling window management on your Mac. Every window arranges itself automatically — terminals on one workspace, browsers on another, one key to switch between them.
 
-This is a portable, opinionated AeroSpace tiling config for macOS. Two workspaces, one toggle key, zero complexity.
-
-**What each file does:**
-
-| File | Purpose |
-|---|---|
-| `aerospace.toml` | The config — keybindings, gaps, and app-routing rules |
-| `toggle.sh` | F1 handler — toggles between workspace 1 and 2 |
-| `push-window.sh` | F2 handler — pushes focused window to the other workspace |
-| `rescue.sh` | Opt+Shift+R handler — re-tiles lost/offscreen windows |
-| `boom.sh` | Config reloader — validates and restarts AeroSpace safely |
-
-**The two-workspace philosophy:**
-- **Workspace 1** — terminals and editors (where you write code)
-- **Workspace 2** — browsers (where you look things up)
-- Everything else tiles on whichever workspace it opens on
-- Apps that don't tile well (Finder, System Settings, utilities) auto-float
+You don't need to know anything about tiling window managers. Just follow along.
 
 ## First-Time Setup
 
 Triggered by: "install", "set up", "set this up", or `/install`
 
-Work through each step in order. Briefly explain what you're about to do before doing it. If the user is running with `--dangerously-skip-permissions`, proceed automatically but still explain each step.
+Work through each step in order. Explain what you're about to do and why before doing it. Assume the user has never used a terminal or tiling window manager before. If running with `--dangerously-skip-permissions`, proceed automatically but still explain each step.
 
-### Step 1: Prerequisites
+### Step 1: Verify macOS
 
-Check that we're on macOS:
+This only works on macOS. Check:
 ```bash
-uname -s  # must return "Darwin"
+uname -s
 ```
+Must return `Darwin`. If not, stop and tell the user this is macOS-only.
 
-Check for Homebrew:
+### Step 2: Check for Homebrew
+
+Homebrew is the macOS package manager — it lets you install apps from the terminal. Check if it's already installed:
 ```bash
 command -v brew
 ```
 
-If Homebrew is not installed: explain that it's the macOS package manager needed to install AeroSpace. Link to https://brew.sh. Ask the user for permission before installing it with:
+If the command is not found, Homebrew needs to be installed. Explain what it is, link to https://brew.sh, and ask for permission before running:
 ```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-### Step 2: Install AeroSpace
+After install, Homebrew may print instructions about adding it to your PATH. Follow those instructions if shown — they typically look like:
+```bash
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+### Step 3: Install AeroSpace
+
+AeroSpace is a tiling window manager — it automatically arranges your windows so they don't overlap, and lets you switch between groups of windows with a single key.
 
 Check if already installed:
 ```bash
 command -v aerospace
 ```
 
-If not installed:
+If not found:
 ```bash
 brew install --cask nikitabobko/tap/aerospace
 ```
 
-Explain: AeroSpace is a tiling window manager for macOS — it automatically arranges windows so they don't overlap.
+### Step 4: Disable Apple's Built-in Window Tiling
 
-### Step 3: Disable Apple's Built-in Tiling
-
-Apple's window tiling conflicts with AeroSpace — both try to manage window positions. Disable it:
+macOS has its own window tiling feature. It conflicts with AeroSpace — both try to control where windows go. We need to turn Apple's version off.
 
 ```bash
 defaults write com.apple.WindowManager GloballyEnabled -bool false
@@ -70,111 +63,166 @@ defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool false
 defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool false
 ```
 
-### Step 4: Set Function Keys to Standard Mode
+These are macOS preference commands. They disable:
+- The automatic window tiling when you drag windows to screen edges
+- The Option-key-drag tiling shortcut
+- The global window manager that fights with AeroSpace
 
-F1 is the workspace toggle key. By default macOS maps F1 to brightness control, so we need standard function key mode:
+### Step 5: Set Function Keys to Standard Mode
+
+F1 is the main key in this setup — it toggles between your two workspaces. But by default, macOS uses F1 for brightness control.
 
 ```bash
 defaults write -g com.apple.keyboard.fnState -bool true
 ```
 
-Media keys still work by holding Fn. If the user doesn't want to change this, offer to change the toggle key to `alt-grave` instead (edit the F1 binding in `aerospace.toml`).
+This makes F1 through F12 work as regular function keys. Your brightness, volume, and other media controls still work — you just hold the Fn key first.
 
-### Step 5: Link the Config
+**If the user doesn't want to change this:** offer to change the workspace toggle key from `f1` to `alt-grave` (the backtick key with Option held) in `aerospace.toml` instead.
 
-First, check for conflicts:
-- If `~/.aerospace.toml` exists: explain that this file-based config takes precedence over the XDG config directory. Ask to back it up (`mv ~/.aerospace.toml ~/.aerospace.toml.backup`).
-- If `~/.config/aerospace` exists as a real directory (not a symlink to this repo) or as a symlink pointing somewhere else: explain and ask to back it up.
+### Step 6: Link the Config
 
-Then link this repo as the live config:
+This repo IS the config — we just need to tell AeroSpace where to find it by creating a symlink.
+
+**First, check for conflicts:**
+
+Check if `~/.aerospace.toml` exists:
+```bash
+ls -la ~/.aerospace.toml 2>/dev/null
+```
+If it exists: explain that AeroSpace reads this file first, before looking in `~/.config/aerospace/`. It needs to be moved out of the way. Ask permission, then:
+```bash
+mv ~/.aerospace.toml ~/.aerospace.toml.backup
+```
+
+Check if `~/.config/aerospace` already exists:
+```bash
+ls -la ~/.config/aerospace 2>/dev/null
+```
+If it exists as a real directory or a symlink pointing somewhere other than this repo: explain and ask permission, then:
+```bash
+mv ~/.config/aerospace ~/.config/aerospace.backup
+```
+
+**Now create the symlink:**
 ```bash
 mkdir -p ~/.config
 ln -sf "$(pwd)" ~/.config/aerospace
+```
+
+**Make the scripts executable:**
+```bash
 chmod +x *.sh
 ```
 
-Explain: this symlink makes the repo the live config directory. Any edits here take effect on reload.
+Explain: `~/.config/aerospace` now points to this folder. AeroSpace reads its config from here. When you edit files in this folder, you're editing the live config.
 
-### Step 6: Set Up the Reload Command
+### Step 7: Set Up the Reload Command
 
-Check if the boom alias already exists in `~/.zshrc`. If not, append it:
+After making changes to the config, you need to reload AeroSpace. This repo includes `boom.sh` which does that safely. We'll add a shell alias so you can type `boom` from any terminal.
 
+Check if the alias already exists:
+```bash
+grep -q "alias boom=" ~/.zshrc 2>/dev/null
+```
+
+If not found, add it:
 ```bash
 echo "" >> ~/.zshrc
 echo "# AeroSpace config reload" >> ~/.zshrc
 echo "alias boom='~/.config/aerospace/boom.sh'" >> ~/.zshrc
 ```
 
-Explain: `boom` safely reloads your tiling config from any terminal after changes.
+### Step 8: Grant Accessibility Permissions
 
-### Step 7: Grant Accessibility Permissions
+This is the one step that can't be automated. macOS requires you to manually grant accessibility permissions to any app that manages windows. This is a security feature.
 
-This is the only step that can't be automated — macOS requires manual approval for accessibility access.
-
-Open System Settings to the correct pane:
+Open System Settings directly to the right pane:
 ```bash
 open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"
 ```
 
 Walk the user through it:
-1. Click the + button
-2. Navigate to Applications
-3. Find and select AeroSpace
-4. Click Open
+1. Click the **+** button (you may need to click the lock icon first and enter your password)
+2. In the file browser, go to **Applications**
+3. Find **AeroSpace** and select it
+4. Click **Open**
+5. Make sure the toggle next to AeroSpace is turned **on**
 
-Wait for the user to confirm before proceeding.
+**Wait for the user to confirm they've done this before proceeding.**
 
-### Step 8: App Discovery
+### Step 9: App Discovery
 
-Follow the App Discovery procedure below to scan installed apps, compare against the config, and present recommendations.
+Scan the user's installed apps and configure the ones that aren't already in the config. Follow the full App Discovery procedure — it's in the hub CLAUDE.md at `.claude/CLAUDE.hub.md`, or see below in this file.
 
-### Step 9: Launch
+This step detects what apps the user has, figures out which workspace each belongs on (or whether it should float), shows the user a summary, and applies their choices to `aerospace.toml`.
 
-Start AeroSpace:
+See the **App Discovery** section at the bottom of this file for the full procedure.
+
+### Step 10: Launch AeroSpace
+
 ```bash
 open -a AeroSpace
 ```
 
-Wait for it to become responsive:
+Wait for it to become responsive (this can take a few seconds on first launch):
 ```bash
+sleep 3
 aerospace list-workspaces --all
 ```
 
-Reload the config:
+If that command works, AeroSpace is running. Reload the config to make sure everything is applied:
 ```bash
 aerospace reload-config
 ```
 
+### Step 11: Switch to Operational Mode
+
+The setup is complete. Now swap this install CLAUDE.md for the operational version — it turns this folder into the permanent hub for managing your tiling setup.
+
+```bash
+cp .claude/CLAUDE.hub.md CLAUDE.md
+```
+
 Tell the user:
-- Press F1 to toggle between workspaces
-- Their terminals are on workspace 1, browsers on workspace 2
-- Type `boom` after any config change to reload
-- Run `/scan-apps` anytime to add new apps
+
+**You're tiling.** Press F1 to toggle between workspaces. Your terminals are on workspace 1, browsers on workspace 2.
+
+This folder is now your AeroSpace command center. Come back here and open Claude Code anytime you want to:
+- Add or move apps → `/scan-apps`
+- Change keybindings, gaps, or layouts → just ask
+- Fix something → just describe the problem
+- Remove everything → `/uninstall`
+
+You never have to edit config files yourself. Just open Claude Code here and ask.
+
+---
 
 ## App Discovery
 
-Triggered by: First-Time Setup Step 8, or `/scan-apps` anytime
+Triggered by: First-Time Setup Step 9, or `/scan-apps` anytime
 
 ### How to scan
 
-1. List all .app bundles:
+1. List all .app bundles in both app directories:
 ```bash
 ls /Applications/
 ls ~/Applications/ 2>/dev/null
+ls /System/Applications/ 2>/dev/null
 ```
 
 2. For each .app, get its bundle ID:
 ```bash
 mdls -name kMDItemCFBundleIdentifier "/Applications/AppName.app"
 ```
-If mdls returns nothing (common for some apps):
+If mdls returns `(null)` or nothing:
 ```bash
 osascript -e 'id of app "AppName"'
 ```
 
-3. Read `aerospace.toml` and collect all existing `if.app-id` values
+3. Read `aerospace.toml` and collect all existing `if.app-id` values to know what's already configured.
 
-4. Identify apps that are installed but not in any rule
+4. Identify apps that are installed but not in any rule.
 
 ### How to categorize
 
@@ -198,23 +246,24 @@ Examples: Slack, Discord, Messages, Notes, Notion, Obsidian, Spotify, Mail
 
 ### How to present
 
-Show the user a clear summary:
+Show the user a clear summary grouped by category:
 - **Already configured:** [list]
-- **Recommended for Workspace 1:** [list with bundle IDs and reasoning]
-- **Recommended for Workspace 2:** [list with bundle IDs and reasoning]
-- **Recommended to auto-float:** [list with bundle IDs and reasoning]
+- **Recommended for Workspace 1:** [list with bundle IDs and one-line reasoning]
+- **Recommended for Workspace 2:** [list with bundle IDs and one-line reasoning]
+- **Recommended to auto-float:** [list with bundle IDs and one-line reasoning]
 - **No change needed:** [list]
 
 Ask the user if they want to apply these, modify any, or skip.
 
 ### How to apply
 
-For each approved app, append a rule to the appropriate section of `aerospace.toml`. The file has clear section markers:
-- Line containing `# Terminals & Editors` → workspace 1 rules
-- Line containing `# Browsers` → workspace 2 rules
-- Line containing `# Auto-float` → floating rules
+For each approved app, add a `[[on-window-detected]]` block to `aerospace.toml`.
 
-TOML syntax for each rule:
+Insert workspace 1 apps after the last existing workspace 1 rule (before the `# Browsers` comment).
+Insert workspace 2 apps after the last existing workspace 2 rule (before the `# Auto-float` comment).
+Insert auto-float apps at the end of the file.
+
+TOML syntax:
 ```toml
 [[on-window-detected]]
 if.app-id = 'com.example.bundleid'
@@ -228,64 +277,8 @@ if.app-id = 'com.example.bundleid'
 run = 'layout floating'
 ```
 
-After editing, run `boom` (or `aerospace reload-config`) to apply.
-
-## Uninstall
-
-Triggered by: "uninstall", "remove", or `/uninstall`
-
-Before removing anything, check the current system state — only undo what was actually set up.
-
-1. **Remove config symlink** (only if it points to this repo):
+After editing, reload the config:
 ```bash
-# Verify it's our symlink first
-readlink ~/.config/aerospace
-rm ~/.config/aerospace
+aerospace reload-config
 ```
-
-2. **Remove boom alias from ~/.zshrc:**
-Find and remove the `alias boom=` line and its `# AeroSpace config reload` comment.
-
-3. **Restore function keys to media mode:**
-```bash
-defaults write -g com.apple.keyboard.fnState -bool false
-```
-
-4. **Re-enable Apple's tiling:**
-```bash
-defaults write com.apple.WindowManager GloballyEnabled -bool true
-defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool true
-defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool true
-```
-
-5. Tell the user: to fully remove AeroSpace, run:
-```bash
-brew uninstall --cask nikitabobko/tap/aerospace
-```
-
-6. Tell the user: remove AeroSpace from **System Settings → Privacy & Security → Accessibility**
-
-7. Tell the user: this repo is still on disk and safe to delete if desired
-
-## Customization Reference
-
-**Find a bundle ID:**
-```bash
-mdls -name kMDItemCFBundleIdentifier "/Applications/AppName.app"
-# or
-osascript -e 'id of app "AppName"'
-```
-
-**Add an app rule** — append to the appropriate section in `aerospace.toml`:
-```toml
-[[on-window-detected]]
-if.app-id = 'com.example.bundleid'
-run = 'move-node-to-workspace 1'    # 1 for editors, 2 for browsers
-# or: run = 'layout floating'      # for apps that don't tile well
-```
-
-**Change keybindings** — edit the `[mode.main.binding]` section in `aerospace.toml`
-
-**Reload after changes** — type `boom` in any terminal, or press Opt+Shift+; then Esc
-
-**Detailed guides:** see `docs/` for [Keybindings](docs/KEYBINDINGS.md), [Customization](docs/CUSTOMIZATION.md), and [Troubleshooting](docs/TROUBLESHOOTING.md)
+Or run `boom` if the alias is set up.
