@@ -90,7 +90,7 @@ Check if `~/.aerospace.toml` exists:
 ```bash
 ls -la ~/.aerospace.toml 2>/dev/null
 ```
-If it exists: explain that AeroSpace reads this file first, before looking in `~/.config/aerospace/`. It needs to be moved out of the way. Ask permission, then:
+If it exists: explain that AeroSpace will report an ambiguity error if it finds config in both `~/.aerospace.toml` and `~/.config/aerospace/`. It needs to be moved out of the way. Ask permission, then:
 ```bash
 mv ~/.aerospace.toml ~/.aerospace.toml.backup
 ```

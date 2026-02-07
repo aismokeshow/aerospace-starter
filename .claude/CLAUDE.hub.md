@@ -187,7 +187,7 @@ Media keys still work with Fn held. If the user doesn't want this, offer to chan
 ### Step 6: Link the Config
 
 Check for conflicts first:
-- `~/.aerospace.toml` — if exists, back up (`mv ~/.aerospace.toml ~/.aerospace.toml.backup`)
+- `~/.aerospace.toml` — if exists, AeroSpace will report an ambiguity error with the XDG config. Back up: `mv ~/.aerospace.toml ~/.aerospace.toml.backup`
 - `~/.config/aerospace` — if exists as real directory or wrong symlink, back up
 
 Then:
