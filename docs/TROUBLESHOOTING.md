@@ -24,4 +24,13 @@ Or just `boom` — it handles this automatically.
 
 ---
 
+**Windows disappeared / blank space in layout:**
+AeroSpace can lose track of windows in two ways: ghost windows (minimized windows that still hold a tile slot) and lost windows (floating windows dumped off-screen to the bottom-right corner). Both are known upstream issues ([#570](https://github.com/nikitabobko/AeroSpace/issues/570), [#1615](https://github.com/nikitabobko/AeroSpace/issues/1615)).
+
+Hit **Opt+Shift+R** to rescue — it re-tiles every window on the current workspace and rebalances the layout. If that doesn't work, try service mode: **Opt+Shift+;** then **R** to flatten the workspace tree.
+
+To prevent ghost windows, avoid using macOS native minimize (Cmd+M). AeroSpace doesn't reliably detect minimize state changes, so the tile slot stays occupied with nothing visible in it.
+
+---
+
 **Still stuck?** If it's a config issue, open an issue on this [starter repo](https://github.com/aismokeshow/aerospace-starter/issues). For AeroSpace itself, try the [AeroSpace repo](https://github.com/nikitabobko/AeroSpace/issues) — Nikita is responsive and the community is helpful.

@@ -36,6 +36,6 @@ Apps are automatically sent to the right workspace on launch:
 - **Workspace 1 (Dev):** Ghostty, Terminal, iTerm2, Kitty, Alacritty, WezTerm, VS Code, Cursor
 - **Workspace 2 (Browser):** Chrome, Firefox, Arc, Safari, Brave, Edge
 
-Apps that don't tile well — CleanShot, Photoshop, Illustrator, Premiere Pro, ProtonVPN, and several others — float by default. You can toggle any window between floating and tiling with **Opt+F**. Everything else opens on whichever workspace you're on.
+Apps that don't tile well — Finder, System Settings, Calculator, Activity Monitor, Preview, CleanShot, Screen Studio, ProtonVPN, SuperWhisper, Whispering, Speechify, Trickster, CleanMyMac, Logi G HUB, Kando, Photoshop, Illustrator, Premiere Pro, 1Password, and Raycast — float by default. You can toggle any window between floating and tiling with **Opt+F**. Everything else opens on whichever workspace you're on.
 
 **Want to change any of this?** See [Customization](CUSTOMIZATION.md). For the full AeroSpace keybinding reference, see the [official docs](https://nikitabobko.github.io/AeroSpace/guide#key-mapping).

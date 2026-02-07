@@ -6,7 +6,7 @@
 set -euo pipefail
 
 readonly SCRIPT_NAME="$(basename "$0")"
-readonly LOCKFILE="/tmp/${SCRIPT_NAME}.lock"
+readonly LOCKDIR="/tmp/${SCRIPT_NAME}.lock"
 readonly STARTUP_TIMEOUT=10
 
 # ── Colors ──────────────────────────────────────────────────
@@ -24,22 +24,27 @@ log_warn()    { echo -e "${YELLOW}⚠${NC} $*" >&2; }
 
 # ── Cleanup ─────────────────────────────────────────────────
 cleanup() {
-    rm -f "$LOCKFILE"
+    rm -rf "$LOCKDIR"
 }
 trap cleanup EXIT INT TERM
 
 # ── Lock (prevent concurrent runs) ─────────────────────────
 acquire_lock() {
-    if [[ -f "$LOCKFILE" ]]; then
-        local lock_pid
-        lock_pid=$(cat "$LOCKFILE" 2>/dev/null || echo "")
-        if [[ -n "$lock_pid" ]] && kill -0 "$lock_pid" 2>/dev/null; then
-            log_error "Already running (PID: $lock_pid)"
-            return 1
-        fi
-        rm -f "$LOCKFILE"
+    if mkdir "$LOCKDIR" 2>/dev/null; then
+        echo "$$" > "$LOCKDIR/pid"
+        return 0
     fi
-    echo $$ > "$LOCKFILE"
+    # Lock exists — check if holder is still alive
+    local lock_pid
+    lock_pid=$(cat "$LOCKDIR/pid" 2>/dev/null || echo "")
+    if [[ -n "$lock_pid" ]] && kill -0 "$lock_pid" 2>/dev/null; then
+        log_error "Already running (PID: $lock_pid)"
+        return 1
+    fi
+    # Stale lock — reclaim
+    rm -rf "$LOCKDIR"
+    mkdir "$LOCKDIR" 2>/dev/null || { log_error "Failed to acquire lock"; return 1; }
+    echo "$$" > "$LOCKDIR/pid"
 }
 
 # ── AeroSpace helpers ───────────────────────────────────────
