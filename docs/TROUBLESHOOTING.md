@@ -1,6 +1,6 @@
 # Troubleshooting
 
-Something's weird. Let's fix it fast.
+Common fixes. Most issues are one setting away.
 
 **Windows aren't tiling / AeroSpace seems dead:**
 Check that Accessibility permissions are granted ([Setup step 2](SETUP.md#2-grant-accessibility-permissions)). Restart AeroSpace: `aerospace quit` then reopen it, or run `boom`.

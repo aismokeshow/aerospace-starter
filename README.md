@@ -32,7 +32,7 @@ If you've gone down the yabai rabbit hole, wrestled with Amethyst's defaults, or
 > You can also type `/install`, `/scan-apps`, or `/uninstall` at any time.
 
 <details>
-<summary><strong>Manual setup (without Claude Code)</strong></summary>
+<summary><strong>Manual setup</strong></summary>
 
 ```bash
 # 1. Install AeroSpace
@@ -82,7 +82,7 @@ Finder, System Settings, Calculator, Preview, Activity Monitor,
 1Password, Raycast, CleanShot X, Adobe apps, and more
 
 Everything else tiles by default. Use `/scan-apps` in Claude Code
-to add your specific apps, or see [Customization](docs/CUSTOMIZATION.md).
+to detect your installed apps and configure them automatically, or see [Customization](docs/CUSTOMIZATION.md).
 
 </details>
 

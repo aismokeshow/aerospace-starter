@@ -1,11 +1,11 @@
 # AeroSpace Starter — Setup
 
 > For fully automated setup, run Claude Code with `--dangerously-skip-permissions`.
-> Otherwise Claude will ask before each system change — which is fine, just slower.
+> Otherwise Claude will ask for confirmation before each system change.
 
 This will set up AeroSpace tiling window management on your Mac. Every window arranges itself automatically — terminals on one workspace, browsers on another, one key to switch between them.
 
-You don't need to know anything about tiling window managers. Just follow along.
+No prior experience with tiling window managers needed.
 
 ## First-Time Setup
 
@@ -23,7 +23,7 @@ Must return `Darwin`. If not, stop and tell the user this is macOS-only.
 
 ### Step 2: Check for Homebrew
 
-Homebrew is the macOS package manager — it lets you install apps from the terminal. Check if it's already installed:
+Homebrew is the macOS package manager. Check if it's already installed:
 ```bash
 command -v brew
 ```
@@ -38,6 +38,12 @@ After install, Homebrew may print instructions about adding it to your PATH. Fol
 echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
+
+Verify Homebrew is accessible:
+```bash
+command -v brew
+```
+If this doesn't return a path, the terminal needs to be restarted. Tell the user to close and reopen their terminal, then re-run the setup.
 
 ### Step 3: Install AeroSpace
 
@@ -68,6 +74,12 @@ These are macOS preference commands. They disable:
 - The Option-key-drag tiling shortcut
 - The global window manager that fights with AeroSpace
 
+Verify:
+```bash
+defaults read com.apple.WindowManager GloballyEnabled
+```
+Should output `0`.
+
 ### Step 5: Set Function Keys to Standard Mode
 
 F1 is the main key in this setup — it toggles between your two workspaces. But by default, macOS uses F1 for brightness control.
@@ -78,7 +90,13 @@ defaults write -g com.apple.keyboard.fnState -bool true
 
 This makes F1 through F12 work as regular function keys. Your brightness, volume, and other media controls still work — you just hold the Fn key first.
 
-**If the user doesn't want to change this:** offer to change the workspace toggle key from `f1` to `alt-grave` (the backtick key with Option held) in `aerospace.toml` instead.
+Verify:
+```bash
+defaults read -g com.apple.keyboard.fnState
+```
+Should output `1`.
+
+**If the user doesn't want to change this:** offer to change the workspace toggle key from `f1` to `alt-backtick` (the `` ` `` key in the top-left of your keyboard, held with Option) in `aerospace.toml` instead.
 
 ### Step 6: Link the Config
 
@@ -107,13 +125,15 @@ mv ~/.config/aerospace ~/.config/aerospace.backup
 **Now create the symlink:**
 ```bash
 mkdir -p ~/.config
-ln -sf "$(pwd)" ~/.config/aerospace
+ln -sf "<absolute-path-to-this-repo>" ~/.config/aerospace
 ```
+Use the absolute path to this repo directory (the directory containing aerospace.toml).
 
 **Make the scripts executable:**
 ```bash
-chmod +x *.sh
+chmod +x <repo-path>/*.sh
 ```
+Use the same absolute repo path as above.
 
 Explain: `~/.config/aerospace` now points to this folder. AeroSpace reads its config from here. When you edit files in this folder, you're editing the live config.
 
@@ -132,6 +152,8 @@ echo "" >> ~/.zshrc
 echo "# AeroSpace config reload" >> ~/.zshrc
 echo "alias boom='~/.config/aerospace/boom.sh'" >> ~/.zshrc
 ```
+
+Note: this alias is for zsh (the default macOS shell). If the user runs bash or fish, adjust the syntax and config file accordingly.
 
 ### Step 8: Grant Accessibility Permissions
 
@@ -171,7 +193,12 @@ sleep 3
 aerospace list-workspaces --all
 ```
 
-If that command works, AeroSpace is running. Reload the config to make sure everything is applied:
+If that command works, AeroSpace is running. If this fails or returns nothing:
+- Check AeroSpace is running: `pgrep -x AeroSpace`
+- If not running, launch again: `open -a AeroSpace`
+- If still failing, Accessibility permissions weren't granted — go back to Step 8
+
+Reload the config to make sure everything is applied:
 ```bash
 aerospace reload-config
 ```
@@ -183,6 +210,8 @@ The setup is complete. Now swap this install CLAUDE.md for the operational versi
 ```bash
 cp .claude/CLAUDE.hub.md CLAUDE.md
 ```
+
+Note: this changes a tracked file. If you run `git status`, you'll see CLAUDE.md as modified — that's expected.
 
 Tell the user:
 
@@ -259,11 +288,11 @@ Ask the user if they want to apply these, modify any, or skip.
 
 For each approved app, add a `[[on-window-detected]]` block to `aerospace.toml`.
 
-Insert workspace 1 apps after the last existing workspace 1 rule (before the `# Browsers` comment).
-Insert workspace 2 apps after the last existing workspace 2 rule (before the `# Auto-float` comment).
+Insert workspace 1 apps after the last existing workspace 1 rule (before the `# Browsers → workspace 2` comment).
+Insert workspace 2 apps after the last existing workspace 2 rule (before the `# Auto-float — apps that don't tile well` comment).
 Insert auto-float apps at the end of the file.
 
-TOML syntax:
+Each rule is a TOML block (similar to an INI file):
 ```toml
 [[on-window-detected]]
 if.app-id = 'com.example.bundleid'

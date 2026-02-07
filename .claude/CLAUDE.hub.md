@@ -1,6 +1,10 @@
 # AeroSpace Starter
 
-This is the user's AeroSpace tiling window manager config. This folder is the command center — the user comes here and asks Claude Code to make changes. They should never need to edit files manually.
+This folder is your AeroSpace command center. Open Claude Code here and ask for what you want — add apps, change keybindings, troubleshoot, or tweak your layout. You never need to edit config files manually.
+
+The instructions below tell Claude Code how to manage everything. You can read along if you're curious, but you don't have to.
+
+**What's below:** A reference for every file, keybinding, and config section. Useful if you want to understand how things work — and it's what Claude Code reads when you ask it to make changes.
 
 ## How This Works
 
@@ -129,6 +133,8 @@ If this setup has already been completed (the symlink exists, AeroSpace is insta
 
 Work through each step in order. Explain what you're about to do and why before doing it. Assume the user has never used a terminal or tiling window manager before. If running with `--dangerously-skip-permissions`, proceed automatically but still explain each step.
 
+> This is the canonical install procedure. The install-version CLAUDE.md (active before first setup) contains a more detailed copy — it gets replaced by this file after Step 10.
+
 ### Step 1: Verify macOS
 
 ```bash
@@ -153,6 +159,12 @@ echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
 eval "$(/opt/homebrew/bin/brew shellenv)"
 ```
 
+Verify Homebrew is accessible:
+```bash
+command -v brew
+```
+If this doesn't return a path, the terminal needs to be restarted. Tell the user to close and reopen their terminal, then re-run the setup.
+
 ### Step 3: Install AeroSpace
 
 ```bash
@@ -174,6 +186,12 @@ defaults write com.apple.WindowManager EnableTilingByEdgeDrag -bool false
 defaults write com.apple.WindowManager EnableTilingOptionAccelerator -bool false
 ```
 
+Verify:
+```bash
+defaults read com.apple.WindowManager GloballyEnabled
+```
+Should output `0`.
+
 ### Step 5: Set Function Keys to Standard Mode
 
 F1 is the workspace toggle. macOS defaults it to brightness.
@@ -182,19 +200,27 @@ F1 is the workspace toggle. macOS defaults it to brightness.
 defaults write -g com.apple.keyboard.fnState -bool true
 ```
 
-Media keys still work with Fn held. If the user doesn't want this, offer to change the toggle key to `alt-grave` instead.
+Verify:
+```bash
+defaults read -g com.apple.keyboard.fnState
+```
+Should output `1`.
+
+Media keys still work with Fn held. If the user doesn't want this, offer to change the toggle key to `alt-backtick` (the `` ` `` key in the top-left of your keyboard, held with Option) instead.
 
 ### Step 6: Link the Config
 
 Check for conflicts first:
-- `~/.aerospace.toml` — if exists, AeroSpace will report an ambiguity error with the XDG config. Back up: `mv ~/.aerospace.toml ~/.aerospace.toml.backup`
+- `~/.aerospace.toml` — if exists, AeroSpace will report an ambiguity error because it found config in both locations. Back up: `mv ~/.aerospace.toml ~/.aerospace.toml.backup`
 - `~/.config/aerospace` — if exists as real directory or wrong symlink, back up
 
 Then:
+
+Use the absolute path to this repo (the directory containing aerospace.toml):
 ```bash
 mkdir -p ~/.config
-ln -sf "$(pwd)" ~/.config/aerospace
-chmod +x *.sh
+ln -sf "<absolute-path-to-this-repo>" ~/.config/aerospace
+chmod +x <absolute-path-to-this-repo>/*.sh
 ```
 
 ### Step 7: Set Up the Reload Command
@@ -209,6 +235,8 @@ echo "" >> ~/.zshrc
 echo "# AeroSpace config reload" >> ~/.zshrc
 echo "alias boom='~/.config/aerospace/boom.sh'" >> ~/.zshrc
 ```
+
+Note: this alias is for zsh (the default macOS shell). If the user runs bash or fish, adjust the syntax and config file accordingly.
 
 ### Step 8: Grant Accessibility Permissions
 
@@ -230,6 +258,14 @@ Follow the App Discovery procedure below.
 open -a AeroSpace
 sleep 3
 aerospace list-workspaces --all
+```
+
+If this fails or returns nothing:
+- Check AeroSpace is running: `pgrep -x AeroSpace`
+- If not running, launch again: `open -a AeroSpace`
+- If still failing, Accessibility permissions weren't granted — go back to Step 8
+
+```bash
 aerospace reload-config
 ```
 
@@ -301,10 +337,12 @@ Triggered by: "uninstall", "remove", or `/uninstall`
 
 Check the current state before removing anything. Only undo what was actually set up.
 
-1. **Remove config symlink** (only if it's a symlink pointing to this repo):
+1. **Remove config symlink (only if it's a symlink, not a real directory):**
 ```bash
-readlink ~/.config/aerospace
-rm ~/.config/aerospace
+if [ -L ~/.config/aerospace ]; then
+    readlink ~/.config/aerospace
+    rm ~/.config/aerospace
+fi
 ```
 
 2. **Remove boom alias from ~/.zshrc:**

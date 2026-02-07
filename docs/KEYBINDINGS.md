@@ -27,6 +27,8 @@ Additional bindings for layout control and service mode.
 | **Service: Esc** | Reload config + exit |
 | **Service: B** | Balance window sizes + exit |
 
+**Service mode** is a secondary key layer. Press **Opt+Shift+;** to enter it — the keys above become active until you press one, then you're back to normal. It keeps infrequent commands out of the way without using extra keybindings.
+
 ---
 
 ## App Routing
@@ -36,6 +38,6 @@ Apps are automatically sent to the right workspace on launch:
 - **Workspace 1 (Dev):** Ghostty, Terminal, iTerm2, Kitty, Alacritty, WezTerm, VS Code, Cursor
 - **Workspace 2 (Browser):** Chrome, Firefox, Arc, Safari, Brave, Edge
 
-Apps that don't tile well — Finder, System Settings, Calculator, Activity Monitor, Preview, CleanShot, Screen Studio, ProtonVPN, SuperWhisper, Whispering, Speechify, Trickster, CleanMyMac, Logi G HUB, Kando, Photoshop, Illustrator, Premiere Pro, 1Password, and Raycast — float by default. You can toggle any window between floating and tiling with **Opt+F**. Everything else opens on whichever workspace you're on.
+Some apps don't work well in a tiled layout — they have fixed-size windows, popup interfaces, or aren't designed to share screen space. These float by default: Finder, System Settings, 1Password, Raycast, Adobe apps, and others. You can toggle any window between floating and tiling with **Opt+F**. Everything else opens on whichever workspace you're on.
 
 **Want to change any of this?** See [Customization](CUSTOMIZATION.md). For the full AeroSpace keybinding reference, see the [official docs](https://nikitabobko.github.io/AeroSpace/guide#key-mapping).

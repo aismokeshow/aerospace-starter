@@ -32,7 +32,7 @@ Or via terminal:
 defaults write -g com.apple.keyboard.fnState -bool true
 ```
 
-Your media keys still work — just hold **Fn** first. If you'd rather not change this, swap `f1` for something like `alt-grave` in `aerospace.toml` and skip this step.
+Your media keys still work — just hold **Fn** first. If you'd rather not change this, swap `f1` for something like `alt-backtick` (the `` ` `` key, top-left corner) in `aerospace.toml` and skip this step.
 
 ## 4. Set up the reload command
 

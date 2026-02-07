@@ -1,7 +1,6 @@
 Follow the "First-Time Setup" procedure in the project's CLAUDE.md file.
-If CLAUDE.md doesn't have a "First-Time Setup" section (it may have been
-swapped to the operational version), read `.claude/CLAUDE.hub.md` instead
-and follow the "First-Time Setup" section there.
+Both the install version and the operational hub version contain this
+procedure, so it works regardless of which version is active.
 
 Work through each step in order. For each step, explain what you're about
 to do and why before doing it. Assume the user has never used a terminal
