@@ -1,0 +1,310 @@
+#    (
+#   ( )
+#  (   )
+#  aerospace-starter by aismokeshow
+#
+#  An opinionated macOS tiling config.
+#  Two workspaces. One toggle. Zero complexity.
+#
+#  https://www.aismokeshow.com
+#  Powered by AeroSpace: https://github.com/nikitabobko/AeroSpace
+
+config-version = 2
+start-at-login = true
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# Homebrew PATH — required for exec-and-forget commands
+# Covers both Apple Silicon (/opt/homebrew/bin) and Intel (/usr/local/bin)
+[exec.env-vars]
+PATH = '/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin'
+
+# ~~~ Gaps ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[gaps]
+inner.horizontal = 8
+inner.vertical   = 8
+outer.left       = 8
+outer.bottom     = 8
+outer.top        = 8
+outer.right      = 8
+
+# ~~~ Main mode keybindings ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[mode.main.binding]
+
+# F1 — toggle between workspace 1 and 2
+f1 = 'exec-and-forget ~/.config/aerospace/toggle.sh'
+
+# F2 — push focused window to the other workspace
+f2 = 'exec-and-forget ~/.config/aerospace/push-window.sh'
+
+# Focus — vim-style
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+
+# Cycle focus through windows in workspace
+alt-w = 'focus --boundaries workspace --boundaries-action wrap-around-the-workspace next'
+
+# Move windows
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+
+# Resize
+alt-minus = 'resize smart -100'
+alt-equal = 'resize smart +100'
+
+# Layout toggle (horizontal ↔ vertical)
+alt-slash = 'layout tiles horizontal vertical'
+
+# Floating toggle
+alt-f = 'layout floating tiling'
+
+# Rescue lost windows (re-tile everything on current workspace)
+alt-shift-r = 'exec-and-forget ~/.config/aerospace/rescue.sh'
+
+# Service mode
+alt-shift-semicolon = 'mode service'
+
+# ~~~ Service mode ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[mode.service.binding]
+esc    = ['reload-config', 'mode main']
+b      = ['balance-sizes', 'mode main']
+r      = ['flatten-workspace-tree', 'mode main']
+
+# ~~~ Window detection rules ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# Terminals & Editors → workspace 1
+[[on-window-detected]]
+if.app-id = 'com.mitchellh.ghostty'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Terminal'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'com.googlecode.iterm2'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'net.kovidgoyal.kitty'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'org.alacritty'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'com.github.wez.wezterm'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+# Cursor — primary bundle ID (todesktop-generated, may vary)
+if.app-id = 'com.todesktop.230313mzl4w4u92'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+# Cursor — fallback for installs with a different todesktop bundle ID
+if.app-name-regex-substring = '^Cursor$'
+run = 'move-node-to-workspace 1'
+
+# Browsers → workspace 2
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'org.mozilla.firefox'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Safari'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'com.brave.Browser'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.edgemac'
+run = 'move-node-to-workspace 2'
+
+# Auto-float — apps that don't tile well
+[[on-window-detected]]
+if.app-id = 'pl.maketheweb.cleanshotx'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.timpler.screenstudio'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.timpler.screenstudio.helper'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.timpler.screenstudio.helper.GPU'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.timpler.screenstudio.helper.Renderer'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.timpler.screenstudio.helper.Plugin'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'ch.protonvpn.mac'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.superduper.superwhisper'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.bradenwong.whispering'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.cliffweitzman.speechifydesktop3'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apparentsoft.trickster'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.macpaw.CleanMyMac5'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.logi.ghub'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.electron.kando'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.adobe.Photoshop'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.adobe.illustrator'
+run = 'layout floating'
+
+[[on-window-detected]]
+# Premiere Pro — bundle ID includes version year suffix (.25 = 2025)
+# Update the number when upgrading (e.g., .26 for 2026)
+if.app-id = 'com.adobe.PremierePro.25'
+run = 'layout floating'
+
+# macOS system apps that don't tile well
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.systempreferences'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.calculator'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ActivityMonitor'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Preview'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.FaceTime'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.PhotoBooth'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Photos'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Maps'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.AppStore'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.iCal'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.AddressBook'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.reminders'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Home'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Passwords'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.ScreenSharing'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.keychainaccess'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.DiskUtility'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.Console'
+run = 'layout floating'
+
+# Common utilities
+[[on-window-detected]]
+if.app-id = 'com.1password.1password'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.raycast.macos'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.utmapp.UTM'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.utmapp.QEMULauncher'
+run = 'layout floating'
+
+[[on-window-detected]]
+if.app-id = 'com.utmapp.QEMUHelper'
+run = 'layout floating'
