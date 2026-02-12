@@ -49,7 +49,7 @@ That's it. Claude clones the repo, reads the install instructions, and handles e
 > **Re-installing or already have the folder?** Open Claude Code in `~/.aismokeshow/aerospace-starter` and type `/install`.
 
 > [!NOTE]
-> To skip confirmation prompts, start Claude Code with `--dangerously-skip-permissions` — only if you've reviewed [what the install changes](#what-does-install-change-on-my-mac).
+> To skip confirmation prompts, start Claude Code with `--dangerously-skip-permissions` (or `smoke` if you have [dotfiles-starter](https://github.com/aismokeshow/dotfiles-starter) installed) — only if you've reviewed [what the install changes](#what-does-install-change-on-my-mac).
 
 ## Why This Exists
 
