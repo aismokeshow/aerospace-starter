@@ -53,18 +53,26 @@ xcode-select -p 2>/dev/null
 
 If this fails, tell the user:
 
-> **One thing first.** Your Mac needs Apple's developer tools installed (don't worry — it's just a standard system component, not the full Xcode app).
->
-> 1. Copy and paste this into your terminal, then hit Enter:
->
-> ```
-> xcode-select --install
-> ```
->
-> 2. A popup will appear — click **"Install"** and wait for it to finish
-> 3. Come back here and say **"done"**
+```
+╔══════════════════════════════════════════════════════════════╗
+║  🛑  YOUR TURN — Claude can't do this step for you          ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  Your Mac needs Apple's developer tools installed            ║
+║  (just a standard system component, not the full Xcode app). ║
+║                                                              ║
+║  1. Copy and paste this into your terminal, then hit Enter:  ║
+║                                                              ║
+║     xcode-select --install                                   ║
+║                                                              ║
+║  2. A popup will appear — click "Install" and wait           ║
+║  3. Come back here and say "done"                            ║
+║                                                              ║
+║  ⏎ Come back here and say "done" when finished               ║
+╚══════════════════════════════════════════════════════════════╝
+```
 
-**Wait for user confirmation before continuing.**
+**MANDATORY GATE — Do not proceed until the user explicitly confirms. Silence or ambiguous responses are NOT confirmation.**
 
 ### Step 2b: Check for Homebrew
 
@@ -79,24 +87,30 @@ Check if already installed:
 
 If missing, tell the user exactly this (copy-paste friendly, beginner-safe):
 
-> **One quick thing I need your help with.** Homebrew (the macOS package manager) needs your password to install, and I can't type passwords for you. This is the only manual step in the whole process.
->
-> **Here's what to do:**
->
-> 1. Open a new terminal window next to this one (⌘N)
-> 2. Copy and paste this entire line, then hit Enter:
->
-> ```
-> /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-> ```
->
-> 3. Type your Mac password when asked (you won't see it as you type — that's normal)
-> 4. Wait for it to finish (1-3 minutes)
-> 5. Come back here and say **"done"**
->
-> That's it — I'll handle everything else from there.
+```
+╔══════════════════════════════════════════════════════════════╗
+║  🛑  YOUR TURN — Claude can't do this step for you          ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  Homebrew (the macOS package manager) needs your password    ║
+║  to install, and I can't type passwords for you.             ║
+║                                                              ║
+║  1. Open a new terminal window next to this one (⌘N)         ║
+║  2. Copy and paste this entire line, then hit Enter:         ║
+║                                                              ║
+║     /bin/bash -c "$(curl -fsSL                               ║
+║       https://raw.githubusercontent.com/Homebrew/            ║
+║       install/HEAD/install.sh)"                              ║
+║                                                              ║
+║  3. Type your Mac password when asked                        ║
+║     (you won't see it as you type — that's normal)           ║
+║  4. Wait for it to finish (1-3 minutes)                      ║
+║                                                              ║
+║  ⏎ Come back here and say "done" when finished               ║
+╚══════════════════════════════════════════════════════════════╝
+```
 
-**Wait for user confirmation before continuing.** Do not proceed on silence or ambiguous responses. Only continue when the user explicitly confirms Homebrew is installed.
+**MANDATORY GATE — Do not proceed until the user explicitly confirms. Silence or ambiguous responses are NOT confirmation.**
 
 After Homebrew is confirmed, verify it's reachable:
 
@@ -302,14 +316,25 @@ Open System Settings directly to the right pane:
 open "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"
 ```
 
-Walk the user through it:
-1. Click the **+** button (macOS will prompt for your password or Touch ID to authorize the change)
-2. In the file browser, go to **Applications**
-3. Find **AeroSpace** and select it
-4. Click **Open**
-5. Make sure the toggle next to AeroSpace is turned **on**
+Tell the user:
 
-**Wait for the user to confirm they've done this before proceeding.**
+```
+╔══════════════════════════════════════════════════════════════╗
+║  🛑  YOUR TURN — Claude can't do this step for you          ║
+╠══════════════════════════════════════════════════════════════╣
+║                                                              ║
+║  macOS just opened System Settings → Accessibility.          ║
+║  AeroSpace needs permission to move your windows.            ║
+║                                                              ║
+║  1. Click the + button (authenticate with password/Touch ID) ║
+║  2. Go to Applications → find AeroSpace → click Open         ║
+║  3. Make sure the toggle next to AeroSpace is ON             ║
+║                                                              ║
+║  ⏎ Come back here and say "done" when finished               ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+**MANDATORY GATE — Do not proceed until the user explicitly confirms. Silence or ambiguous responses are NOT confirmation.**
 
 ### Step 9: App Discovery
 
@@ -385,14 +410,42 @@ MIT — [aismokeshow](https://www.aismokeshow.com/) · [aerospace-starter](https
 EOF
 ```
 
-Tell the user:
+After all steps, print this completion message. Use the exact structure and ASCII art below — do NOT improvise, rearrange, or add extra suggestions.
 
-**You're tiling.** Press F1 to toggle between workspaces. Your terminals are on workspace 1, browsers on workspace 2.
+---
 
-This folder is now your AeroSpace command center. Come back here and open Claude Code anytime you want to:
-- Add or move apps → `/scan-apps`
-- Change keybindings, gaps, or layouts → `/customize`
-- Fix something → `/troubleshoot`
-- Remove everything → `/uninstall`
+**First, the activation primer (lead with this):**
 
-You never have to edit config files yourself. Just open Claude Code here and ask.
+> **You're tiling.** Press F1 to toggle between workspace 1 and workspace 2. Your windows auto-arrange by app — terminals on one side, browsers on the other.
+
+**Then a quick start (3 things to try):**
+
+> Here are three things to try right now:
+>
+> - Press **F1** — switch between workspace 1 (terminals) and workspace 2 (browsers)
+> - Press **alt-h/j/k/l** — move focus between windows (vim-style)
+> - Type `boom` in your terminal — reload AeroSpace config after any change
+
+**Then the hub callout:**
+
+> This folder is your AeroSpace command center. Open Claude Code here anytime:
+> `/scan-apps` · `/customize` · `/troubleshoot` · `/uninstall`
+>
+> You never have to edit config files yourself. Just open Claude Code here and ask.
+
+**Then the branded sign-off (print this ASCII art exactly):**
+
+```
+    🔥
+   /||\
+  / || \
+ /  ||  \
+/___||___\
+
+ AISMOKESHOW
+ aismokeshow.com
+
+ You're tiling. Welcome to window management that works.
+```
+
+**Important:** `~/.config/aerospace` is now a symlink to this folder. Don't move or delete it — your AeroSpace config lives here permanently.
