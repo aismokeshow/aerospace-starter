@@ -23,11 +23,26 @@ If either exists, ask the user if they want to restore it:
 - `mv ~/.aerospace.toml.backup ~/.aerospace.toml`
 - `mv ~/.config/aerospace.backup ~/.config/aerospace`
 
-2. **Remove boom alias from the user's shell rc file:**
-Detect the login shell: `basename "$SHELL"`. Then check and remove the `alias boom=` line (or `alias boom ` for fish) and its `# AeroSpace config reload` comment from the corresponding file:
-- zsh: `~/.zshrc`
-- bash: `~/.bashrc`
-- fish: `~/.config/fish/config.fish`
+2. **Remove boom alias from the user's shell config:**
+
+Detect the login shell: `basename "$SHELL"`. Determine which file contains the boom alias — it depends on whether dotfiles-starter was present during install.
+
+**For zsh:** Check if `~/.zshrc` is a symlink managed by dotfiles-starter:
+```bash
+readlink ~/.zshrc 2>/dev/null
+```
+If the symlink target contains `dotfiles-starter` or `zsh/.zshrc`, the boom alias was added to `aliases.zsh` in the same directory as the symlink target:
+```bash
+dirname "$(readlink ~/.zshrc)"
+```
+Check that file for the alias: `grep -q "alias boom=" "<resolved-dir>/aliases.zsh"`. If found, remove the alias and its comment from `aliases.zsh`.
+
+If `~/.zshrc` is NOT a dotfiles-starter symlink, remove from `~/.zshrc` directly.
+
+**For bash:** Remove from `~/.bashrc`.
+**For fish:** Remove from `~/.config/fish/config.fish` (uses `alias boom ` with space, not `=`).
+
+In all cases, remove both the `alias boom=` line (or `alias boom ` for fish) and its `# AeroSpace config reload` comment.
 
 3. **Restore function keys to media mode:**
 ```bash

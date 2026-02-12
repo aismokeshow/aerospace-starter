@@ -26,7 +26,7 @@ Extract the major version number (the part before the first dot — e.g., `15` f
 ```bash
 uname -m
 ```
-`arm64` = Apple Silicon. `x86_64` = Intel. This determines the Homebrew prefix in Step 2.
+`arm64` = Apple Silicon. `x86_64` = Intel. This determines the Homebrew prefix in Step 2b.
 
 **Login shell:**
 ```bash
@@ -42,58 +42,74 @@ Result is `zsh`, `bash`, or `fish`. Use this table for all rc/profile file opera
 
 If `$SHELL` is empty or not one of the above, default to zsh (macOS default since Catalina).
 
-### Step 2: Check for Homebrew
+### Step 2: Verify Xcode Command Line Tools
 
-Homebrew is the macOS package manager. Check if it's already installed:
-```bash
-command -v brew
-```
+**Precondition:** Step 1 passed.
+**Goal:** Ensure the C toolchain and system headers are available (Homebrew requires them).
 
-If the command is not found, Homebrew needs to be installed. Explain what it is, link to https://brew.sh.
-
-**First, check for Xcode Command Line Tools** (Homebrew requires them):
 ```bash
 xcode-select -p 2>/dev/null
 ```
-If this fails (exit code non-zero), they need to be installed first. Tell the user this may take several minutes, then run:
+
+If this fails, tell the user:
+
+> **One thing first.** Your Mac needs Apple's developer tools installed (don't worry — it's just a standard system component, not the full Xcode app).
+>
+> 1. Copy and paste this into your terminal, then hit Enter:
+>
+> ```
+> xcode-select --install
+> ```
+>
+> 2. A popup will appear — click **"Install"** and wait for it to finish
+> 3. Come back here and say **"done"**
+
+**Wait for user confirmation before continuing.**
+
+### Step 2b: Check for Homebrew
+
+**Precondition:** Step 2 passed (Xcode CLT available).
+**Goal:** Ensure Homebrew is available. Homebrew requires sudo, which Claude Code cannot provide — the user must install it themselves if it's not already present.
+
+Check if already installed:
+
 ```bash
-xcode-select --install 2>/dev/null
+/opt/homebrew/bin/brew --version 2>/dev/null || /usr/local/bin/brew --version 2>/dev/null || echo "missing"
 ```
-This triggers a macOS GUI dialog — the user must click "Install" and wait for it to complete. **Wait for the user to confirm the Xcode CLT install finished before continuing.**
 
-Now install Homebrew with `NONINTERACTIVE=1` to prevent it from hanging in Claude Code's non-interactive shell. Warn the user: "Homebrew needs your Mac password to install. Type it when prompted — the characters won't appear as you type."
+If missing, tell the user exactly this (copy-paste friendly, beginner-safe):
+
+> **One quick thing I need your help with.** Homebrew (the macOS package manager) needs your password to install, and I can't type passwords for you. This is the only manual step in the whole process.
+>
+> **Here's what to do:**
+>
+> 1. Open a new terminal window next to this one (⌘N)
+> 2. Copy and paste this entire line, then hit Enter:
+>
+> ```
+> /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+> ```
+>
+> 3. Type your Mac password when asked (you won't see it as you type — that's normal)
+> 4. Wait for it to finish (1-3 minutes)
+> 5. Come back here and say **"done"**
+>
+> That's it — I'll handle everything else from there.
+
+**Wait for user confirmation before continuing.** Do not proceed on silence or ambiguous responses. Only continue when the user explicitly confirms Homebrew is installed.
+
+After Homebrew is confirmed, verify it's reachable:
+
 ```bash
-NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+/opt/homebrew/bin/brew --version 2>/dev/null || /usr/local/bin/brew --version 2>/dev/null
 ```
 
-After install, Homebrew may print instructions about adding it to your PATH. **Follow those instructions exactly** — they contain the correct path for the user's architecture. If Homebrew's output isn't captured, use the architecture detected in Step 1:
-
-For **arm64** (Apple Silicon):
-```bash
-eval "$(/opt/homebrew/bin/brew shellenv)"
-```
-
-For **x86_64** (Intel):
-```bash
-eval "$(/usr/local/bin/brew shellenv)"
-```
-
-To persist this across terminal sessions, append the eval line to the user's **profile file** (from the shell table in Step 1) — but first check if it's already there (prevents duplicates on re-runs):
+To persist Homebrew across terminal sessions, append the eval line to the user's **profile file** (from the shell table in Step 1) — but first check if it's already there (prevents duplicates on re-runs):
 - zsh: `grep -q 'brew shellenv' ~/.zprofile 2>/dev/null || echo 'eval "$(brew shellenv)"' >> ~/.zprofile`
 - bash: `grep -q 'brew shellenv' ~/.bash_profile 2>/dev/null || echo 'eval "$(brew shellenv)"' >> ~/.bash_profile`
 - fish: `grep -q 'brew shellenv' ~/.config/fish/config.fish 2>/dev/null || echo 'eval (brew shellenv)' >> ~/.config/fish/config.fish`
 
-Note: use `brew shellenv` (no absolute path) in the persisted line — Homebrew will already be in PATH by then.
-
-Verify Homebrew is accessible:
-```bash
-command -v brew
-```
-If `command -v brew` doesn't find it (common after a fresh install, since Claude Code starts each shell command fresh), use the absolute path based on the architecture from Step 1:
-- **arm64**: `/opt/homebrew/bin/brew`
-- **x86_64**: `/usr/local/bin/brew`
-
-Use this absolute path for all `brew` commands in subsequent steps if `brew` is not in PATH.
+**Important:** Claude Code's Bash tool does not persist shell state between commands. `eval "$(brew shellenv)"` only affects the current command. For all subsequent `brew` commands in this procedure, **always use the absolute path**: `/opt/homebrew/bin/brew` (Apple Silicon) or `/usr/local/bin/brew` (Intel), based on the architecture from Step 1.
 
 ### Step 3: Install AeroSpace
 
@@ -104,7 +120,7 @@ Check if already installed (the CLI may not be in PATH until the app has launche
 ls /Applications/AeroSpace.app 2>/dev/null || command -v aerospace 2>/dev/null
 ```
 
-If neither is found, install it. Use the absolute brew path from Step 2 if `brew` is not in PATH:
+If neither is found, install it. Use the absolute brew path from Step 2b if `brew` is not in PATH:
 ```bash
 brew install --cask nikitabobko/tap/aerospace
 ```

@@ -73,8 +73,9 @@ At these points, stop and wait for explicit user confirmation. Do not proceed on
 
 ### Steps requiring manual user action
 These steps involve macOS GUI interactions that cannot be automated:
-1. **Xcode Command Line Tools install** (Step 2) — triggers a macOS dialog the user must click through
-2. **Accessibility permissions** (Step 8) — the user must manually add AeroSpace in System Settings
+1. **Xcode Command Line Tools install** (Step 2) — user must run `xcode-select --install` in their terminal and click through the macOS dialog
+2. **Homebrew install** (Step 2b) — user must install manually in a new terminal window (⌘N) since it requires sudo
+3. **Accessibility permissions** (Step 8) — the user must manually add AeroSpace in System Settings
 
 At both points, **wait for the user to confirm they have completed the action** before proceeding.
 
@@ -109,17 +110,18 @@ Follow this exact sequence when running the procedure:
 
 1. Read `docs/INSTALL-PROCEDURE.md`
 2. Execute Step 1 (macOS verification and system fingerprint)
-3. Execute Step 2 (Homebrew — may require Xcode CLT GUI install)
-4. Execute Step 3 (install AeroSpace via Homebrew cask)
-5. Execute Steps 4-5 (disable Apple window tiling, set function keys)
-6. Execute Step 6 (link config — symlink repo to `~/.config/aerospace`, chmod scripts)
-7. Execute Step 7 (boom alias — read cross-project-awareness.md, use safe-merge-config skill)
-8. Execute Step 8 (Accessibility permissions — MANUAL USER ACTION)
-9. Execute Step 9 (app discovery — delegates to `docs/APP-DISCOVERY.md`)
-10. Execute Step 10 (launch AeroSpace, reload config, verify)
-11. Execute Step 11 (switch to operational CLAUDE.md)
-12. Execute Step 12 (optional cleanup — DESTRUCTIVE BOUNDARY)
-13. Deliver the post-install message from the procedure
+3. Execute Step 2 (Xcode CLT — user must run in their terminal and confirm)
+4. Execute Step 2b (Homebrew — user must install manually via ⌘N if missing)
+5. Execute Step 3 (install AeroSpace via Homebrew cask)
+6. Execute Steps 4-5 (disable Apple window tiling, set function keys)
+7. Execute Step 6 (link config — symlink repo to `~/.config/aerospace`, chmod scripts)
+8. Execute Step 7 (boom alias — read cross-project-awareness.md, use safe-merge-config skill)
+9. Execute Step 8 (Accessibility permissions — MANUAL USER ACTION)
+10. Execute Step 9 (app discovery — delegates to `docs/APP-DISCOVERY.md`)
+11. Execute Step 10 (launch AeroSpace, reload config, verify)
+12. Execute Step 11 (switch to operational CLAUDE.md)
+13. Execute Step 12 (optional cleanup — DESTRUCTIVE BOUNDARY)
+14. Deliver the post-install message from the procedure
 
 ## Important Notes About This Project
 
