@@ -2,7 +2,7 @@
 
 Called by `/install` — Step 0 (origin verification) runs first from CLAUDE.md.
 
-> **Already set up?** If AeroSpace is installed, the symlink exists (`~/.config/aerospace` → this repo), and the config is linked, tell the user everything is already configured and offer to run `/scan-apps` to check for new apps.
+> **Already set up?** If `.installed` exists in this directory, or if AeroSpace is installed and the symlink exists (`~/.config/aerospace` → this repo), tell the user everything is already configured and offer to run `/scan-apps` to check for new apps.
 
 Work through each step in order. Explain what you're about to do and why before doing it. Assume the user has never used a terminal or tiling window manager before.
 
@@ -334,6 +334,12 @@ cp .claude/CLAUDE.hub.md CLAUDE.md
 ```
 
 Note: this changes a tracked file. If you run `git status`, you'll see CLAUDE.md as modified — that's expected.
+
+Write a marker file so future agents can detect this is an active install (even if `.git` was removed in Step 12):
+
+```bash
+date -u '+%Y-%m-%dT%H:%M:%SZ' > .installed
+```
 
 ### Step 12: Clean Up Packaging (Optional)
 

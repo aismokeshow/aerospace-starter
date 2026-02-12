@@ -12,7 +12,17 @@ Triggered by: "install", "set up", "set this up", or `/install`
 
 Delegate to the `install-aerospace` agent. If the agent is not available, work through the steps below manually.
 
-### Step 0: Verify Repo Origin
+### Step 0: Check for Existing Install
+
+Before anything else, check if this directory is already an active install:
+
+```bash
+test -f .installed && echo "INSTALLED" || echo "NEW"
+```
+
+**If INSTALLED:** This config is already set up. Do NOT re-clone or delete this directory — `~/.config/aerospace` is symlinked here. Instead, tell the user: "This is already installed (since `<date from .installed>`). Run `/scan-apps` to check for new apps, or `/customize` to make changes." Stop here.
+
+### Step 0b: Verify Repo Origin
 
 Check that this repo was cloned from the official source:
 ```bash
