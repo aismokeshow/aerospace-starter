@@ -64,3 +64,15 @@ Extreme Ownership skill for Claude Code.
 
 **Action:**
 - No interaction with aerospace config or shell files. Informational only.
+
+---
+
+## 5. synosuite
+
+Synology NAS deployer. Runs entirely on the NAS — no local shell config artifacts.
+
+**Detection:**
+- `~/.aismokeshow/synosuite/` exists
+
+**Action:**
+- No interaction with aerospace config or shell files. No action required.

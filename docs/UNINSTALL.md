@@ -72,4 +72,9 @@ brew uninstall --cask nikitabobko/tap/aerospace
 
 7. Tell the user: remove AeroSpace from System Settings → Privacy & Security → Accessibility. Also check System Settings → General → Login Items and remove AeroSpace if it appears there.
 
-8. Tell the user: The `~/.aismokeshow/aerospace-starter` folder (or wherever you cloned it) is still on disk. It's just a config directory now — safe to delete if you no longer want AeroSpace. If no other aismokeshow projects remain, you can also remove `~/.aismokeshow/`.
+8. **Remove install marker** (prevents stale detection on re-clone):
+```bash
+rm -f .installed
+```
+
+9. Tell the user: The `~/.aismokeshow/aerospace-starter` folder (or wherever you cloned it) is still on disk. It's just a config directory now — safe to delete if you no longer want AeroSpace. If no other aismokeshow projects remain, you can also remove `~/.aismokeshow/`.

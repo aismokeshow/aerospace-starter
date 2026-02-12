@@ -16,6 +16,9 @@ Apple's built-in tiling is still on. Go back to [Setup step 1](SETUP.md#1-turn-o
 **Config change didn't take effect:**
 Run `boom` or press **Opt+Shift+;** then **Esc** to reload. AeroSpace doesn't hot-reload on file save.
 
+**Config reload fails with a parse error:**
+You have a TOML syntax issue in `aerospace.toml` — missing quotes, unclosed brackets, or duplicate keys. Run `aerospace reload-config` to see the exact error and line number. Fix the offending line and reload again.
+
 **AeroSpace is unresponsive:**
 ```bash
 aerospace quit
