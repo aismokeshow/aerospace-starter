@@ -37,16 +37,16 @@ An opinionated AeroSpace tiling config for macOS. Terminals on workspace 1, brow
 
 ## Install
 
-Open [Claude Code](https://github.com/anthropics/claude-code) and paste:
+Open [Claude Code](https://github.com/anthropics/claude-code) and paste this single command:
 
 ```
-Install this on my Mac → https://github.com/aismokeshow/aerospace-starter
+clone https://github.com/aismokeshow/aerospace-starter to ~/.aismokeshow/aerospace-starter then cd in and follow the CLAUDE.md
 ```
 
-That's it. Claude handles Homebrew, AeroSpace, config linking, macOS settings, and scans your apps to build a custom tiling layout. The only manual step is granting Accessibility permissions when macOS asks.
+That's it. Claude clones the repo, reads the install instructions, and handles everything — Homebrew, AeroSpace, config linking, macOS settings, and scans your apps to build a custom tiling layout. The only manual step is granting Accessibility permissions when macOS asks.
 
 > [!TIP]
-> **Already cloned the repo?** Open Claude Code in the repo folder and type `/install`.
+> **Re-installing or already have the folder?** Open Claude Code in `~/.aismokeshow/aerospace-starter` and type `/install`.
 
 > [!NOTE]
 > To skip confirmation prompts, start Claude Code with `--dangerously-skip-permissions` — only if you've reviewed [what the install changes](#what-does-install-change-on-my-mac).
