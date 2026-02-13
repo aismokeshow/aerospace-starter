@@ -158,7 +158,7 @@ Key interactions:
 
 Triggered by: `/install`
 
-If `.installed` exists in this directory, or AeroSpace is installed and the symlink exists (`~/.config/aerospace` → this repo), tell the user everything is already configured and offer to run `/scan-apps` to check for new apps.
+If `.installed` exists in this directory, or AeroSpace is installed and the symlink exists (`~/.config/aerospace` → this repo), run `git pull --ff-only 2>/dev/null || true` first, then tell the user everything is up to date (pulled latest) and offer `/scan-apps` to check for new apps.
 
 Otherwise, the `install-aerospace` agent handles the full setup. It reads `docs/INSTALL-PROCEDURE.md` and executes all 12 steps, using the `safe-merge-config` skill for shell config file changes.
 

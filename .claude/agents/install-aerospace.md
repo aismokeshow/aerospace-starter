@@ -84,7 +84,7 @@ After each major phase, give a brief status update:
 - "Homebrew is installed and in PATH."
 - "AeroSpace installed. Gatekeeper quarantine cleared."
 - "Apple window tiling disabled. Function keys set to standard mode."
-- "Config linked: `~/.config/aerospace` → this folder."
+- "Config linked: `~/.config/aerospace` → `~/.aismokeshow/aerospace-starter`."
 - "Cross-project check: dotfiles-starter detected, boom alias added to aliases.zsh"
 - "App discovery complete: 8 apps configured, 3 set to float."
 

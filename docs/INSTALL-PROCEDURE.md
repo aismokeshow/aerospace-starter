@@ -239,7 +239,7 @@ chmod +x <repo-path>/*.sh
 ```
 Use the same absolute repo path as above.
 
-Explain: `~/.config/aerospace` now points to this folder. AeroSpace reads its config from here. When you edit files in this folder, you're editing the live config.
+Explain: `~/.config/aerospace` now points to `~/.aismokeshow/aerospace-starter`. AeroSpace reads its config from there. When you edit files in that folder, you're editing the live config.
 
 ### Step 7: Set Up the Reload Command
 
@@ -384,9 +384,11 @@ date -u '+%Y-%m-%dT%H:%M:%SZ' > .installed
 
 The repo was the delivery mechanism — now strip it down to just the config.
 
-**Before proceeding, warn the user:** "This step removes git history and packaging files. After this, you won't be able to `git pull` updates — you'd need to re-clone from scratch. If you want to keep the ability to pull future updates, say 'skip'. Otherwise, say 'continue'."
+Tell the user:
 
-**Wait for explicit confirmation. If the user says skip, move on to the final message.**
+> **Skip or clean up?** Say "skip" to keep git history (you can `git pull` updates later). Say "continue" to remove git history and packaging files — this is permanent.
+
+**Wait for explicit confirmation. Default to skip if unclear.**
 
 ```bash
 rm -rf <repo-path>/images
@@ -400,7 +402,7 @@ Replace the GitHub README with a minimal operational one:
 cat > <repo-path>/README.md << 'EOF'
 # AeroSpace Config
 
-Your tiling window manager lives here. Open Claude Code in this folder to manage it.
+Your tiling window manager config. To manage it: `cd ~/.aismokeshow/aerospace-starter && claude`
 
 `/scan-apps` · `/customize` · `/troubleshoot` · `/uninstall`
 
@@ -426,10 +428,10 @@ After all steps, print this completion message. Use the exact structure and ASCI
 
 **Then the hub callout:**
 
-> This folder is your AeroSpace command center. Open Claude Code here anytime:
+> To manage your config: `cd ~/.aismokeshow/aerospace-starter && claude`
 > `/scan-apps` · `/customize` · `/troubleshoot` · `/uninstall`
 >
-> You never have to edit config files yourself. Just open Claude Code here and ask.
+> You never have to edit config files yourself. Just ask Claude.
 
 **Then the branded sign-off (print this ASCII art exactly):**
 
@@ -446,4 +448,13 @@ After all steps, print this completion message. Use the exact structure and ASCI
  You're tiling. Welcome to window management that works.
 ```
 
-**Important:** `~/.config/aerospace` is now a symlink to this folder. Don't move or delete it — your AeroSpace config lives here permanently.
+**Important:** `~/.config/aerospace` is now a symlink to `~/.aismokeshow/aerospace-starter`. Don't move or delete that folder — your AeroSpace config lives there.
+
+**Then print this required step — F1 won't work without it:**
+
+> **REQUIRED: Enable standard function keys.**
+>
+> 1. System Settings > Keyboard > Keyboard Shortcuts... > Function Keys
+> 2. Toggle on **"Use F1, F2, etc. keys as standard function keys"**
+>
+> Without this, F1 controls brightness instead of toggling workspaces.
