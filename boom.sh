@@ -37,12 +37,18 @@ acquire_lock() {
     # Lock exists — check if holder is still alive
     local lock_pid
     lock_pid=$(cat "$LOCKDIR/pid" 2>/dev/null || echo "")
-    if [[ -n "$lock_pid" ]] && kill -0 "$lock_pid" 2>/dev/null; then
+    if [[ -n "$lock_pid" ]] && kill -0 -- "$lock_pid" 2>/dev/null; then
         log_error "Already running (PID: $lock_pid)"
         return 1
     fi
-    # Stale lock — reclaim (holder is dead)
-    echo "$$" > "$LOCKDIR/pid" || { log_error "Failed to reclaim lock"; return 1; }
+    # Stale lock — remove and re-acquire atomically
+    rm -rf "$LOCKDIR"
+    if ! mkdir "$LOCKDIR" 2>/dev/null; then
+        log_error "Another instance reclaimed the lock"
+        return 1
+    fi
+    echo "$$" > "$LOCKDIR/pid" || { log_error "Failed to write PID"; return 1; }
+    return 0
 }
 
 # ── AeroSpace helpers ───────────────────────────────────────
@@ -102,8 +108,11 @@ main() {
     ensure_running || return 1
 
     log_info "Reloading config..."
-    if ! aerospace reload-config 2>&1; then
-        log_error "Config reload failed"
+    local reload_output
+    reload_output=$(aerospace reload-config 2>&1)
+    if [[ $? -ne 0 ]]; then
+        log_error "Config reload failed:"
+        echo "$reload_output" >&2
         return 1
     fi
     log_success "Config reloaded"
